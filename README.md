@@ -1,14 +1,14 @@
 ## Ansible windows custom facts
 
 ### Get facts from Windows servers
-In this video I want to show you, as ai Linux admin, how to get facts from a windows wserver.
+In this video I want to show you, as a Linux admin, how to get facts from a windows wserver.
 
 
 To set the scene, you're a ```Linux admin``` who works with Ansible. You already collect facts, including custom facts from Linux servers, but you've been asked to extent this to a small number of Windows servers. Apart from the usual facts collected by the setup module, we also need to know the versions of installed software so we can get a picture of our estate. You don't know how to write powershell but you know it can't be that hard...
 
 This is what I'm going to show you today:
 
-  * I already have Ansible able to manage a windows server. IF you don't, check out my other video on gtting that setup: https://youtu.be/aPN18jLRkJI or for SSH connectivity use: https://youtu.be/RESB6ksAlj0
+  * I already have Ansible able to manage a windows server. If you don't, check out my other video on gtting that setup: https://youtu.be/aPN18jLRkJI or for SSH connectivity use: https://youtu.be/RESB6ksAlj0
   * I'm going to show you how to collect facts from a windows server using the setup module.
   * Next I'll add a custom facts to collect the ```apache``` version installed. If it's not installed, we add ```not installed``` into setup.
 
