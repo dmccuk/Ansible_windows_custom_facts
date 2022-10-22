@@ -1,0 +1,31 @@
+---
+- hosts: win
+  gather_facts: yes
+  tasks:
+    - name: Create WIndows DIR
+      win_file:
+        path: C:\Temp\facts
+        state: directory
+
+    - name: Copy powershell script to windows servers
+      win_copy:
+        src: files/local.ps1
+        dest: 'C:\Temp\facts\'
+
+    - name: Create custom fact directory
+      file:
+        path: /tmp/facts
+        state: directory
+      delegate_to: localhost
+
+    - name: Add facts to a variable
+      setup:
+        fact_path: C:/TEMP/facts
+      register: setupvar
+
+    - name: Store facts indexed by hostname in /tmp/facts
+      copy:
+        content: '{{ setupvar }}'
+        dest: /tmp/facts/{{ ansible_hostname }}.yaml
+        mode: 0600
+      delegate_to: localhost
