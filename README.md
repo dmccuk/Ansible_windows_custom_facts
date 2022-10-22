@@ -4,7 +4,7 @@
 In this video I want to show you, as a Linux admin, how to get facts from a windows wserver.
 
 
-To set the scene, you're a ```Linux admin``` who works with Ansible. You already collect facts, including custom facts from Linux servers, but you've been asked to extent this to a small number of Windows servers. Apart from the usual facts collected by the setup module, we also need to know the versions of installed software so we can get a picture of our estate. You don't know how to write powershell but you know it can't be that hard...
+To set the scene, you're a ```Linux admin``` who works with Ansible. You already collect facts, including custom facts from Linux servers, but you've been asked to extend this to a small number of Windows servers. Apart from the usual facts collected by the setup module, we also need to know the versions of installed software so we can get a picture across our estate. You maybe don't know how to write powershell but you know it can't be that hard...
 
 This is what I'm going to show you today:
 
@@ -55,13 +55,13 @@ if (!(Get-NetFirewallRule -Name "OpenSSH-Server-In-TCP" -ErrorAction SilentlyCon
 #### Create the hosts.ini file:
 
 ````
-[ec2-user@ip-172-31-16-55 windows]$ cat hosts.ini
+[ec2-user@ip-172-31-16-55 windows]$ vi hosts.ini
 [win]
 IP_ADDRESS
 
 [win:vars]
 ansible_user=Administrator
-ansible_password=
+ansible_password="PASSWORD"
 ansible_connection=ssh
 ansible_shell_type=cmd
 ansible_ssh_common_args=-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
@@ -71,13 +71,16 @@ ansible_become_method=runas
 
 #### Confirm connectivity via Ansible to Windows
 
+````
 $ ansible win  -m win_ping
+````
 
+You shoud get back a green pong!
 
 #### Powershell
 Manually run the powershell command to see it in action.
 
-
+Inside files/local.ps1, you will find the command I'm running. Run them on the command line to see what they do.
 
 #### Run Ansible to collect the fact
 Now run ansible to send over the local.ps1 file to Windows and run it, collecting the custom fact along with it.
@@ -86,7 +89,14 @@ Now run ansible to send over the local.ps1 file to Windows and run it, collectin
 #### Check the fact
 On the linux server, I've copied the server facts file from the windows server back over to the linux server. Now we can use JQ to pull out the custom fact we just created.
 
-
+````
+$  cat /tmp/facts/EC2AMAZ-SN1IBVJ.yaml | jq  -r '.ansible_facts.ansible_local.local.local_facts'
+{
+  "apache_name": "2.2.25",
+  "apache": "2.2.25        ",
+  "other": "Other_not_installed"
+}
+````
 
 ### Next steps
 Now you've got this overview and example of collecting specific information to use in custom facts, you can extend this almost any piece of information available on the Windows server.
